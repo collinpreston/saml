@@ -142,14 +142,9 @@ const DefaultCacheDuration = time.Hour * 24 * 1
 
 // Metadata returns the service provider metadata
 func (sp *ServiceProvider) Metadata() *EntityDescriptor {
-	validDuration := DefaultValidDuration
-	if sp.MetadataValidDuration > 0 {
-		validDuration = sp.MetadataValidDuration
-	}
 
 	authnRequestsSigned := len(sp.SignatureMethod) > 0
 	wantAssertionsSigned := true
-	validUntil := TimeNow().Add(validDuration)
 
 	var keyDescriptors []KeyDescriptor
 	if sp.Certificate != nil {
@@ -200,7 +195,6 @@ func (sp *ServiceProvider) Metadata() *EntityDescriptor {
 
 	return &EntityDescriptor{
 		EntityID:   firstSet(sp.EntityID, sp.MetadataURL.String()),
-		ValidUntil: validUntil,
 
 		SPSSODescriptors: []SPSSODescriptor{
 			{
@@ -208,7 +202,6 @@ func (sp *ServiceProvider) Metadata() *EntityDescriptor {
 					RoleDescriptor: RoleDescriptor{
 						ProtocolSupportEnumeration: "urn:oasis:names:tc:SAML:2.0:protocol",
 						KeyDescriptors:             keyDescriptors,
-						ValidUntil:                 &validUntil,
 					},
 					SingleLogoutServices: sloEndpoints,
 					NameIDFormats:        []NameIDFormat{sp.AuthnNameIDFormat},
