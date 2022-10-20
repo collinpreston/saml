@@ -30,6 +30,8 @@ type Options struct {
 	CookieSameSite        http.SameSite
 	RelayStateFunc        func(w http.ResponseWriter, r *http.Request) string
 	LogoutBindings        []string
+	NameIDFormat		  string
+
 }
 
 // DefaultSessionCodec returns the default SessionCodec for the provided options,
