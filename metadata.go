@@ -25,7 +25,6 @@ const SOAPBinding = "urn:oasis:names:tc:SAML:2.0:bindings:SOAP"
 type EntitiesDescriptor struct {
 	XMLName             xml.Name       `xml:"urn:oasis:names:tc:SAML:2.0:metadata EntitiesDescriptor"`
 	ID                  *string        `xml:",attr,omitempty"`
-	ValidUntil          *time.Time     `xml:"validUntil,attr,omitempty"`
 	CacheDuration       *time.Duration `xml:"cacheDuration,attr,omitempty"`
 	Name                *string        `xml:",attr,omitempty"`
 	Signature           *etree.Element
@@ -49,7 +48,6 @@ type EntityDescriptor struct {
 	XMLName                       xml.Name      `xml:"urn:oasis:names:tc:SAML:2.0:metadata EntityDescriptor"`
 	EntityID                      string        `xml:"entityID,attr"`
 	ID                            string        `xml:",attr,omitempty"`
-	ValidUntil                    time.Time     `xml:"validUntil,attr,omitempty"`
 	CacheDuration                 time.Duration `xml:"cacheDuration,attr,omitempty"`
 	Signature                     *etree.Element
 	RoleDescriptors               []RoleDescriptor               `xml:"RoleDescriptor"`
@@ -68,11 +66,9 @@ type EntityDescriptor struct {
 func (m EntityDescriptor) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
 	type Alias EntityDescriptor
 	aux := &struct {
-		ValidUntil    RelaxedTime `xml:"validUntil,attr,omitempty"`
 		CacheDuration Duration    `xml:"cacheDuration,attr,omitempty"`
 		*Alias
 	}{
-		ValidUntil:    RelaxedTime(m.ValidUntil),
 		CacheDuration: Duration(m.CacheDuration),
 		Alias:         (*Alias)(&m),
 	}
@@ -83,7 +79,6 @@ func (m EntityDescriptor) MarshalXML(e *xml.Encoder, start xml.StartElement) err
 func (m *EntityDescriptor) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	type Alias EntityDescriptor
 	aux := &struct {
-		ValidUntil    RelaxedTime `xml:"validUntil,attr,omitempty"`
 		CacheDuration Duration    `xml:"cacheDuration,attr,omitempty"`
 		*Alias
 	}{
@@ -92,7 +87,6 @@ func (m *EntityDescriptor) UnmarshalXML(d *xml.Decoder, start xml.StartElement) 
 	if err := d.DecodeElement(aux, &start); err != nil {
 		return err
 	}
-	m.ValidUntil = time.Time(aux.ValidUntil)
 	m.CacheDuration = time.Duration(aux.CacheDuration)
 	return nil
 }
@@ -139,7 +133,6 @@ type ContactPerson struct {
 // See http://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf §2.4.1
 type RoleDescriptor struct {
 	ID                         string        `xml:",attr,omitempty"`
-	ValidUntil                 *time.Time    `xml:"validUntil,attr,omitempty"`
 	CacheDuration              time.Duration `xml:"cacheDuration,attr,omitempty"`
 	ProtocolSupportEnumeration string        `xml:"protocolSupportEnumeration,attr"`
 	ErrorURL                   string        `xml:"errorURL,attr,omitempty"`
@@ -295,7 +288,6 @@ type AttributeAuthorityDescriptor struct {
 type AffiliationDescriptor struct {
 	AffiliationOwnerID string        `xml:"affiliationOwnerID,attr"`
 	ID                 string        `xml:",attr"`
-	ValidUntil         time.Time     `xml:"validUntil,attr,omitempty"`
 	CacheDuration      time.Duration `xml:"cacheDuration,attr"`
 	Signature          *etree.Element
 	AffiliateMembers   []string        `xml:"AffiliateMember"`
