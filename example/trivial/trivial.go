@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/crewjam/saml/samlsp"
+	"github.com/collinpreston/saml/samlsp"
 )
 
 var samlMiddleware *samlsp.Middleware
