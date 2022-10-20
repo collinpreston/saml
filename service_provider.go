@@ -135,7 +135,7 @@ var MaxIssueDelay = time.Second * 90
 var MaxClockSkew = time.Second * 180
 
 // DefaultValidDuration is how long we assert that the SP metadata is valid.
-const DefaultValidDuration = time.Hour * 24 * 2
+const DefaultValidDuration = time.Minute * 2
 
 // DefaultCacheDuration is how long we ask the IDP to cache the SP metadata.
 const DefaultCacheDuration = time.Hour * 24 * 1
